@@ -1,0 +1,38 @@
+﻿@using d6Invoice.Models
+@model System.Collections.Generic.IEnumerable< d6Invoice.Models.Client >
+
+@{
+    ViewBag.Title = "Client's";
+}
+
+@Html.ActionLink( "Add", "Create", null, new { @class = "btn btn-primary" } )
+<div class="">
+    <table>
+        <thead>
+        <tr>
+            <th> @Html.DisplayNameFor( model => model.Name ) </th>
+            <th> @Html.DisplayNameFor( model => model.Address ) </th>
+            <th> @Html.DisplayNameFor( model => model.Suburb ) </th>
+            <th> @Html.DisplayNameFor( model => model.State ) </th>
+            <th> @Html.DisplayNameFor( model => model.ZipCode ) </th>
+        </tr>   
+        </thead>
+        <tbody>
+        @foreach ( Client client in Model )
+        {
+            <tr>
+                <td> @Html.DisplayFor(model => client.Name) </td>
+                <td> @Html.DisplayFor(model => client.Address) </td>
+                <td> @Html.DisplayFor(model => client.Suburb) </td>
+                <td> @Html.DisplayFor(model => client.State ) </td>
+                <td> @Html.DisplayFor(model => client.ZipCode) </td>
+                <td>
+                    @Html.ActionLink("Edit", "Edit", new { id = client.Id }, new { @class = "btn btn-primary" })
+                    @Html.ActionLink("Details", "Details", new { id = client.Id }, new { @class = "btn btn-info" })
+                    @Html.ActionLink("Delete", "Delete", new { id = client.Id }, new { @class = "btn btn-warning" })
+                </td>
+            </tr>
+        }
+        </tbody>
+    </table>
+</div>
