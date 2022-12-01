@@ -3,7 +3,6 @@ GO
 SET QUOTED_IDENTIFIER ON
 GO
 -- =============================================
--- Copyright © 2022 Polysphere (Pty) Ltd
 -- Author:		Hendrik Oosthuizen
 -- Create date: 2022/12/01
 -- =============================================
