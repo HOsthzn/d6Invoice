@@ -21,13 +21,8 @@
         <dt>@Html.DisplayNameFor( model => model.ZipCode )</dt>
         <dd>@Html.DisplayFor( model => model.ZipCode )</dd>
     </dl>
-
-    <ul class="">
-        <li>
-            @Html.ActionLink( "Edit", "Edit", new { id = Model.Id }, new { @class = "button primary" } )
-        </li>
-        <li>
-            @Html.ActionLink( "Back to List", "Index", null, new { @class = "button special" } )
-        </li>
-    </ul>
+    <div class="col-12">
+        @Html.ActionLink( "Edit", "Edit", new { id = Model.Id }, new { @class = "btn btn-primary" } ) |
+        @Html.ActionLink( "Back to List", "Index", null, new { @class = "btn btn-secondary" } )
+    </div>
 </div>

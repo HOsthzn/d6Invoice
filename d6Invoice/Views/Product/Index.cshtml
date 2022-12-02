@@ -1,4 +1,4 @@
-﻿@model IEnumerable<d6Invoice.Models.Client>
+﻿@model IEnumerable<d6Invoice.Models.Product>
 
 @{
     ViewBag.Title = "Client's";
@@ -6,14 +6,11 @@
 
 @Html.ActionLink("Add", "Create", null, new { @class = "btn btn-primary" })
 <div class="">
-    <table id="tbClients">
+    <table id="tbProducts">
         <thead>
             <tr>
-                <th>Name</th>
-                <th>Address</th>
-                <th>Suburb</th>
-                <th>State</th>
-                <th>Zip Code</th>
+                <th>Description</th>
+                <th>Price</th>
                 <th></th>
             </tr>
         </thead>
@@ -47,6 +44,6 @@
 @section scripts
 {
     <script type="text/javascript">
-        document.addEventListener("DOMContentLoaded", clients.init);
+        document.addEventListener("DOMContentLoaded", products.init);
     </script>
 }

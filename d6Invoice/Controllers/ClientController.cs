@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Configuration;
 using System.Linq;
@@ -19,7 +20,7 @@ public class ClientController : Controller
   }
 
   //GET Client/index
-  public ActionResult Index( int? recPerPage ) { return View(); }
+  public ActionResult Index() => View();
 
   //GET Client/GetClients
   public async Task< ActionResult > GetClients( int? page, int? recPerPage )
@@ -31,12 +32,13 @@ public class ClientController : Controller
                                   {
                                     Page       = page
                                   , RecPerPage = recPerPage
+                                  , Clients    = await _net.StpAsync< Client >( "Client_Get", parameters )
+                                  , PageCount = ( await _net.StpAsync< PageCount >( "Client_GetPageCount"
+                                                 , new Hashtable { { "@recPerPage", recPerPage } } )
+                                                ).First()
+                                                 .Count
                                   };
-    result.Clients = await _net.StpAsync< Client >( "Client_Get", parameters );
-    result.PageCount = _net.StpAsync< PageCount >( "Client_GetPageCount"
-                                                , new Hashtable { { "@recPerPage", recPerPage } } )
-                           .Result.Count;
-    
+
     return Json( result, JsonRequestBehavior.AllowGet );
   }
 
@@ -59,7 +61,27 @@ public class ClientController : Controller
   {
     if ( !ModelState.IsValid ) return View( model );
 
-    return RedirectToAction( "Index" );
+    try
+    {
+      Hashtable parameters = new()
+                             {
+                               { "@Id", model.Id }
+                             , { "@Name", model.Name }
+                             , { "@Address", model.Address }
+                             , { "@Suburb", model.Suburb }
+                             , { "@State", model.State }
+                             , { "@ZipCode", model.ZipCode }
+                             };
+
+      await _net.StpAsync< Client >( "Client_AddUpdate", parameters );
+
+      return RedirectToAction( "Index" );
+    }
+    catch ( Exception e )
+    {
+      ModelState.AddModelError( "Error", e.Message );
+      return View( model );
+    }
   }
 
   //GET Client/edit
@@ -80,7 +102,27 @@ public class ClientController : Controller
   {
     if ( !ModelState.IsValid ) return View( model );
 
-    return RedirectToAction( "Index" );
+    try
+    {
+      Hashtable parameters = new()
+                             {
+                               { "@Id", model.Id }
+                             , { "@Name", model.Name }
+                             , { "@Address", model.Address }
+                             , { "@Suburb", model.Suburb }
+                             , { "@State", model.State }
+                             , { "@ZipCode", model.ZipCode }
+                             };
+
+      await _net.StpAsync< Client >( "Client_AddUpdate", parameters );
+
+      return RedirectToAction( "Index" );
+    }
+    catch ( Exception e )
+    {
+      ModelState.AddModelError( "Error", e.Message );
+      return View( model );
+    }
   }
 
   //GET Client/delete
@@ -96,5 +138,9 @@ public class ClientController : Controller
   [HttpPost]
   [ActionName( "Delete" )]
   [ValidateAntiForgeryToken]
-  public async Task< ActionResult > DeleteConfirmed( int Id ) => RedirectToAction( "Index" );
+  public ActionResult DeleteConfirmed( int id )
+  {
+    _net.InLineStp( "DELETE FROM dbo.Client WHERE Id = @Id", new Hashtable { { "@Id", id } } );
+    return RedirectToAction( "Index" );
+  }
 }

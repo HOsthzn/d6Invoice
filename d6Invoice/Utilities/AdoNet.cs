@@ -24,6 +24,7 @@ public class AdoNet
     List< TModel > models = new();
     try
     {
+      //TransactionScope works the same as a sql TRANSACTION, the function never successfully executes until TransactionScope.Complete is called
       using TransactionScope transactionScope = new();
       using SqlConnection    connection       = new( ConnectionString );
       using SqlCommand       command          = new();
@@ -36,36 +37,32 @@ public class AdoNet
 
       //open the connection to the dataBase
       connection.Open();
-      using ( SqlDataReader reader = command.ExecuteReader( CommandBehavior.CloseConnection ) )
+      using SqlDataReader reader = command.ExecuteReader( CommandBehavior.CloseConnection );
+      try
       {
-        try
-        {
-          if ( reader.HasRows )
+        if ( reader.HasRows )
+          while ( reader.Read() )
           {
-            while ( reader.Read() )
-            {
-              TModel model = new();
-              //use reflection to map the results to an object
-              Dictionary< string, int > indexer = model.GetType()
-                                                       .GetProperties()
-                                                       .ToDictionary( propInfo => propInfo.Name
-                                                                   , propInfo
-                                                                       => reader.GetOrdinal( propInfo.Name ) );
-              foreach ( KeyValuePair< string, int > keyValuePair in indexer )
-                model.GetType()
-                     .GetProperty( keyValuePair.Key )
-                     ?.SetValue( model, reader[ keyValuePair.Value ] is DBNull ? null : reader[ keyValuePair.Value ] );
+            TModel model = new();
+            //use reflection to map the results to an object
+            Dictionary< string, int > indexer = model.GetType()
+                                                     .GetProperties()
+                                                     .ToDictionary( propInfo => propInfo.Name
+                                                                 , propInfo
+                                                                     => reader.GetOrdinal( propInfo.Name ) );
+            foreach ( KeyValuePair< string, int > keyValuePair in indexer )
+              model.GetType()
+                   .GetProperty( keyValuePair.Key )
+                   ?.SetValue( model, reader[ keyValuePair.Value ] is DBNull ? null : reader[ keyValuePair.Value ] );
 
-              models.Add( model );
-            }
+            models.Add( model );
           }
-        }
-        finally
-        {
-          //this step is only to make sure the connection was closed and the command disposed of correctly
-          command.Dispose();
-          if ( connection.State == ConnectionState.Open ) connection.Close();
-        }
+      }
+      finally
+      {
+        //this step is only to make sure the connection was closed and the command disposed of correctly
+        command.Dispose();
+        if ( connection.State == ConnectionState.Open ) connection.Close();
       }
 
       // The Complete method commits the transaction. If an exception has been thrown,
@@ -91,6 +88,7 @@ public class AdoNet
     List< TModel > models = new();
     try
     {
+      //TransactionScope works the same as a sql TRANSACTION, the function never successfully executes until TransactionScope.Complete is called
       using TransactionScope transactionScope = new( TransactionScopeAsyncFlowOption.Enabled );
       using SqlConnection    connection       = new( ConnectionString );
       using SqlCommand       command          = new();
@@ -103,36 +101,32 @@ public class AdoNet
 
       //open the connection to the dataBase
       connection.Open();
-      using ( SqlDataReader reader = await command.ExecuteReaderAsync( CommandBehavior.CloseConnection ) )
+      using SqlDataReader reader = await command.ExecuteReaderAsync( CommandBehavior.CloseConnection );
+      try
       {
-        try
-        {
-          if ( reader.HasRows )
+        if ( reader.HasRows )
+          while ( await reader.ReadAsync() )
           {
-            while ( await reader.ReadAsync() )
-            {
-              TModel model = new();
-              //use reflection to map the results to an object
-              Dictionary< string, int > indexer = model.GetType()
-                                                       .GetProperties()
-                                                       .ToDictionary( propInfo => propInfo.Name
-                                                                   , propInfo
-                                                                       => reader.GetOrdinal( propInfo.Name ) );
-              foreach ( KeyValuePair< string, int > keyValuePair in indexer )
-                model.GetType()
-                     .GetProperty( keyValuePair.Key )
-                     ?.SetValue( model, reader[ keyValuePair.Value ] is DBNull ? null : reader[ keyValuePair.Value ] );
+            TModel model = new();
+            //use reflection to map the results to an object
+            Dictionary< string, int > indexer = model.GetType()
+                                                     .GetProperties()
+                                                     .ToDictionary( propInfo => propInfo.Name
+                                                                 , propInfo
+                                                                     => reader.GetOrdinal( propInfo.Name ) );
+            foreach ( KeyValuePair< string, int > keyValuePair in indexer )
+              model.GetType()
+                   .GetProperty( keyValuePair.Key )
+                   ?.SetValue( model, reader[ keyValuePair.Value ] is DBNull ? null : reader[ keyValuePair.Value ] );
 
-              models.Add( model );
-            }
+            models.Add( model );
           }
-        }
-        finally
-        {
-          //this step is only to make sure the connection was closed and the command disposed of correctly
-          command.Dispose();
-          if ( connection.State == ConnectionState.Open ) connection.Close();
-        }
+      }
+      finally
+      {
+        //this step is only to make sure the connection was closed and the command disposed of correctly
+        command.Dispose();
+        if ( connection.State == ConnectionState.Open ) connection.Close();
       }
 
       // The Complete method commits the transaction. If an exception has been thrown,
@@ -149,12 +143,12 @@ public class AdoNet
   }
 
   //This function will execute any SQL stored procedure but does not map to an object
-  public DataSet Stp( string    stpName
-                    , Hashtable parameters )
+  public DataSet Stp( string stpName, Hashtable parameters )
   {
     DataSet dataSet = new();
     try
     {
+      //TransactionScope works the same as a sql TRANSACTION, the function never successfully executes until TransactionScope.Complete is called
       using TransactionScope transactionScope = new();
       using SqlConnection    connection       = new( ConnectionString );
       using SqlCommand       command          = new();
@@ -179,6 +173,10 @@ public class AdoNet
         command.Dispose();
         if ( connection.State == ConnectionState.Open ) connection.Close();
       }
+
+      // The Complete method commits the transaction. If an exception has been thrown,
+      // Complete is not  called and the transaction is rolled back.
+      transactionScope.Complete();
     }
     catch ( Exception e )
     {
@@ -197,6 +195,49 @@ public class AdoNet
     return await T;
   }
 
+  //Execute T-SQL code in line (Directly from string)
+  //Result indicates the number of affected rows
+  public int InLineStp( string sql, Hashtable parameters )
+  {
+    if ( string.IsNullOrEmpty( sql ) ) throw new ArgumentNullException( nameof( sql ) );
+    int result = 0;
+    try
+    {
+      //TransactionScope works the same as a sql TRANSACTION, the function never successfully executes until TransactionScope.Complete is called
+      using TransactionScope transactionScope = new();
+      using SqlConnection    connection       = new( ConnectionString );
+      using SqlCommand       command          = new();
+      //command configuration, set connection, type and the stored procedure to be executed
+      command.Connection  = connection;
+      command.CommandType = CommandType.Text;
+      command.CommandText = sql;
+
+      if ( parameters != null ) MapParameters( command, parameters );
+
+      //open the connection to the dataBase
+      connection.Open();
+
+      try { result = command.ExecuteNonQuery(); }
+      finally
+      {
+        //this step is only to make sure the connection was closed and the command disposed of correctly
+        command.Dispose();
+        if ( connection.State == ConnectionState.Open ) connection.Close();
+      }
+
+      // The Complete method commits the transaction. If an exception has been thrown,
+      // Complete is not  called and the transaction is rolled back.
+      transactionScope.Complete();
+    }
+    catch ( Exception e )
+    {
+      Console.WriteLine( e );
+      throw;
+    }
+
+    return result;
+  }
+
   private static void MapParameters( SqlCommand command, Hashtable parameters )
   {
     if ( command    == null ) throw new ArgumentNullException( nameof( command ) );
@@ -206,6 +247,6 @@ public class AdoNet
       command.Parameters.AddWithValue( ( parameter.Key.ToString().StartsWith( "@" )
                                            ? parameter.Key
                                            : $@"{parameter.Key}" ).ToString()
-                                    , parameter.Value );
+                                    , parameter.Value ?? DBNull.Value );
   }
 }

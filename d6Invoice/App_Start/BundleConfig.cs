@@ -26,6 +26,6 @@ public class BundleConfig
                                                           , "~/Content/site.css" ) );
 
     bundles.Add( new StyleBundle( "~/Scripts/js" ).Include(
-                                                            "~/Scripts/site.js") );
+                                                           "~/Scripts/site.js" ) );
   }
 }

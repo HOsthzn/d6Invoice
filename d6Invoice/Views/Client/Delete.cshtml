@@ -27,13 +27,8 @@
     {
         @Html.AntiForgeryToken()
 
-        <ul class="actions">
-            <li>
-                <input type="submit" value="Confirm"/>
-            </li>
-            <li>
-                @Html.ActionLink( "Back to List", "Index", null, new { @class = "button special" } )
-            </li>
-        </ul>
+        <div class="col-12">
+            <input class="btn btn-danger" type="submit" value="Confirm"/> | @Html.ActionLink( "Back to List", "Index", null, new { @class = "btn btn-primary" } )
+        </div>
     }
 </div>
