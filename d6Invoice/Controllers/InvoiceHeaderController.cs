@@ -2,4 +2,7 @@
 
 namespace d6Invoice.Controllers;
 
-public class InvoiceHeaderController : Controller { }
+public class InvoiceHeaderController : Controller
+{
+
+}

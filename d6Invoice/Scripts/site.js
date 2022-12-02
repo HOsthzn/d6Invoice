@@ -145,23 +145,21 @@ const clients = {
                         classItems.forEach( c => result.classList.add( c ) );
                         result.href = href;
                         result.innerText = text;
-
                         return result;
                     }
-
                 }
             } )
             .catch( err => console.log( err ) );
     }
     , pagination: {
-        next(e) {
+        next() {
             if( clients.pageNumber < clients.pageCount - 1) {
                 const ddlRecPerPage = document.getElementById( "ddlRecPerPage" );
                 clients.pageNumber++;
                 clients.GetClients( clients.pageNumber, parseInt( ddlRecPerPage.value ) );
             }
         }
-        , previous(e) {
+        , previous() {
             if( clients.pageNumber > 0 ) {
                 const ddlRecPerPage = document.getElementById( "ddlRecPerPage" );
                 clients.pageNumber--;
@@ -176,8 +174,6 @@ const clients = {
             if( [ "btnPrevious", "btnNext" ].includes( parentElement.id ) ) return;
             clients.pageNumber = parentElement.value;
             clients.GetClients( clients.pageNumber , parseInt( ddlRecPerPage.value ) );
-
-            
         }
         , PageCount(numOfPages) {
             const btnNext = document.getElementById( "btnNext" );
@@ -264,14 +260,14 @@ const products = {
             .catch( err => console.log( err ) );
     }
     , pagination: {
-        next(e) {
+        next() {
             if( products.pageNumber < products.pageCount - 1) {
                 const ddlRecPerPage = document.getElementById( "ddlRecPerPage" );
                 products.pageNumber++;
                 products.GetProducts( products.pageNumber, parseInt( ddlRecPerPage.value ) );
             }
         }
-        , previous(e) {
+        , previous() {
             if( products.pageNumber > 0 ) {
                 const ddlRecPerPage = document.getElementById( "ddlRecPerPage" );
                 products.pageNumber--;
