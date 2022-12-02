@@ -1,4 +1,4 @@
-CREATE TABLE Client
+CREATE TABLE dbo.Client
 (
 	Id      INT IDENTITY
 		CONSTRAINT Client_pk
@@ -11,7 +11,7 @@ CREATE TABLE Client
 )
 go
 
-CREATE TABLE InvoiceHeader
+CREATE TABLE dbo.InvoiceHeader
 (
 	Id       INT IDENTITY
 		CONSTRAINT InvoiceHeader_pk
@@ -21,19 +21,19 @@ CREATE TABLE InvoiceHeader
 	Status   TINYINT   DEFAULT 0          NOT NULL,
 	ClientId INT                          NOT NULL
 		CONSTRAINT InvoiceHeader_Client_Id_fk
-			REFERENCES Client
+			REFERENCES dbo.Client
 			ON DELETE CASCADE
 )
 go
 
-CREATE TABLE Invoice
+CREATE TABLE dbo.Invoice
 (
 	Id              INT IDENTITY
 		CONSTRAINT Invoice_pk
 			PRIMARY KEY,
 	InvoiceHeaderId INT                          NOT NULL
 		CONSTRAINT Invoice_InvoiceHeader_null_fk
-			REFERENCES InvoiceHeader
+			REFERENCES dbo.InvoiceHeader
 			ON DELETE CASCADE,
 	Date            DATETIME2 DEFAULT GETDATE( ) NOT NULL,
 	IsPaid          BIT       DEFAULT 0          NOT NULL
@@ -56,7 +56,7 @@ CREATE TRIGGER Invoice_UpdateState
 go
 
 CREATE UNIQUE INDEX InvoiceHeader_RefNum_uindex
-	ON InvoiceHeader ( RefNum )
+	ON dbo.InvoiceHeader ( RefNum )
 go
 
 CREATE TRIGGER InvoiceHeader_UpdateOnlyActive
@@ -74,7 +74,7 @@ BEGIN
 END;
 go
 
-CREATE TABLE Products
+CREATE TABLE dbo.Products
 (
 	Id          INT IDENTITY
 		CONSTRAINT Products_pk
@@ -84,18 +84,18 @@ CREATE TABLE Products
 )
 go
 
-CREATE TABLE InvoiceDetails
+CREATE TABLE dbo.InvoiceDetails
 (
 	Id              INT IDENTITY
 		CONSTRAINT InvoiceDetails_pk
 			PRIMARY KEY,
 	InvoiceHeaderId INT           NOT NULL
 		CONSTRAINT InvoiceDetails_InvoiceHeader_Id_fk
-			REFERENCES InvoiceHeader
+			REFERENCES dbo.InvoiceHeader
 			ON DELETE CASCADE,
 	ProductId       INT           NOT NULL
 		CONSTRAINT InvoiceDetails_Products_Id_fk
-			REFERENCES Products,
+			REFERENCES dbo.Products,
 	Quantity        INT DEFAULT 1 NOT NULL
 )
 go
