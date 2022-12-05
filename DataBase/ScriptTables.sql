@@ -1,13 +1,13 @@
 CREATE TABLE dbo.Client
 (
-	Id      INT IDENTITY
+	Id            INT IDENTITY
 		CONSTRAINT Client_pk
 			PRIMARY KEY,
-	Name    VARCHAR(256) NOT NULL,
-	Address VARCHAR(256),
-	Suburb  VARCHAR(256),
-	State   VARCHAR(256),
-	ZipCode VARCHAR(10)
+	Name          VARCHAR(256) NOT NULL,
+	CompanyName   VARCHAR(256),
+	StreetAddress VARCHAR(256),
+	CityStateZip  VARCHAR(MAX),
+	Phone         NVARCHAR(256)
 )
 go
 
@@ -16,13 +16,13 @@ CREATE TABLE dbo.InvoiceHeader
 	Id       INT IDENTITY
 		CONSTRAINT InvoiceHeader_pk
 			PRIMARY KEY,
-	RefNum   NVARCHAR(128),
 	Date     DATETIME2 DEFAULT GETDATE( ) NOT NULL,
 	Status   TINYINT   DEFAULT 0          NOT NULL,
 	ClientId INT                          NOT NULL
 		CONSTRAINT InvoiceHeader_Client_Id_fk
 			REFERENCES dbo.Client
-			ON DELETE CASCADE
+			ON DELETE CASCADE,
+	DueDate  DATETIME2 DEFAULT GETDATE( ) NOT NULL
 )
 go
 
@@ -53,10 +53,6 @@ CREATE TRIGGER Invoice_UpdateState
 				           FROM inserted
 			           )
 		END;
-go
-
-CREATE UNIQUE INDEX InvoiceHeader_RefNum_uindex
-	ON dbo.InvoiceHeader ( RefNum )
 go
 
 CREATE TRIGGER InvoiceHeader_UpdateOnlyActive
@@ -96,7 +92,8 @@ CREATE TABLE dbo.InvoiceDetails
 	ProductId       INT           NOT NULL
 		CONSTRAINT InvoiceDetails_Products_Id_fk
 			REFERENCES dbo.Products,
-	Quantity        INT DEFAULT 1 NOT NULL
+	Quantity        INT DEFAULT 1 NOT NULL,
+	Taxed           BIT DEFAULT 0 NOT NULL
 )
 go
 
