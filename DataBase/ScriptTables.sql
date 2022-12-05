@@ -22,37 +22,9 @@ CREATE TABLE dbo.InvoiceHeader
 		CONSTRAINT InvoiceHeader_Client_Id_fk
 			REFERENCES dbo.Client
 			ON DELETE CASCADE,
-	DueDate  DATETIME2 DEFAULT GETDATE( ) NOT NULL
+	DueDate  DATETIME2 DEFAULT GETDATE( ) NOT NULL,
+	IsPaid   BIT       DEFAULT 0          NOT NULL
 )
-go
-
-CREATE TABLE dbo.Invoice
-(
-	Id              INT IDENTITY
-		CONSTRAINT Invoice_pk
-			PRIMARY KEY,
-	InvoiceHeaderId INT                          NOT NULL
-		CONSTRAINT Invoice_InvoiceHeader_null_fk
-			REFERENCES dbo.InvoiceHeader
-			ON DELETE CASCADE,
-	Date            DATETIME2 DEFAULT GETDATE( ) NOT NULL,
-	IsPaid          BIT       DEFAULT 0          NOT NULL
-)
-go
-
-CREATE TRIGGER Invoice_UpdateState
-			ON Invoice
-			FOR INSERT
-			AS
-		BEGIN
-			-- update the Invoice header state, to invoiced to prevent any changes from occurring
-			UPDATE InvoiceHeader
-			SET Status = 2
-			WHERE Id = (
-				           SELECT InvoiceHeaderId
-				           FROM inserted
-			           )
-		END;
 go
 
 CREATE TRIGGER InvoiceHeader_UpdateOnlyActive
