@@ -199,8 +199,9 @@ const clients = {
             }
         }
     }
-    , recordsPerPage(e) { clients.GetClients( 0, parseInt( e.target.value ) ); }
+    , recordsPerPage(e) { clients.GetClients( clients.pageNumber, parseInt( e.target.value ) ); }
 };
+
 const products = {
       pageNumber: 0
     , pageCount: 0
@@ -312,6 +313,6 @@ const products = {
     , recordsPerPage(e) { products.GetProducts( products.pageNumber, parseInt( e.target.value ) ); }
 };
 
-const Invoices = { };
-const InvoicesHeaders = { };
-const InvoicesDetails = { };
+const invoices = { };
+const invoicesHeaders = { };
+const invoicesDetails = { };

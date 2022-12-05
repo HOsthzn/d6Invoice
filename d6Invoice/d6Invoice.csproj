@@ -148,6 +148,7 @@
     <Compile Include="Models\Invoice.cs" />
     <Compile Include="Models\InvoiceDetails.cs" />
     <Compile Include="Models\InvoiceHeader.cs" />
+    <Compile Include="Models\InvoiceViewModel.cs" />
     <Compile Include="Models\PageCount.cs" />
     <Compile Include="Models\Product.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -215,6 +216,11 @@
     <Content Include="Views\Product\Delete.cshtml" />
     <Content Include="Views\Product\Details.cshtml" />
     <Content Include="Views\Product\Edit.cshtml" />
+    <Content Include="Views\Invoice\Details.cshtml" />
+    <Content Include="Views\Invoice\Index.cshtml" />
+    <Content Include="Views\Invoice\Create.cshtml" />
+    <Content Include="Views\Invoice\Edit.cshtml" />
+    <Content Include="Views\Invoice\Delete.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

@@ -67,10 +67,10 @@ public class ClientController : Controller
                              {
                                { "@Id", model.Id }
                              , { "@Name", model.Name }
-                             , { "@Address", model.Address }
-                             , { "@Suburb", model.Suburb }
-                             , { "@State", model.State }
-                             , { "@ZipCode", model.ZipCode }
+                             , { "@CompanyName", model.CompanyName }
+                             , { "@StreetAddress", model.StreetAddress }
+                             , { "@CityStateZip", model.CityStateZip }
+                             , { "@Phone", model.Phone }
                              };
 
       await _net.StpAsync< Client >( "Client_AddUpdate", parameters );
@@ -108,10 +108,10 @@ public class ClientController : Controller
                              {
                                { "@Id", model.Id }
                              , { "@Name", model.Name }
-                             , { "@Address", model.Address }
-                             , { "@Suburb", model.Suburb }
-                             , { "@State", model.State }
-                             , { "@ZipCode", model.ZipCode }
+                             , { "@CompanyName", model.CompanyName }
+                             , { "@StreetAddress", model.StreetAddress }
+                             , { "@CityStateZip", model.CityStateZip }
+                             , { "@Phone", model.Phone }
                              };
 
       await _net.StpAsync< Client >( "Client_AddUpdate", parameters );

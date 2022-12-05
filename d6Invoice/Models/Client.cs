@@ -13,21 +13,21 @@ public class Client
   [MaxLength( 256 )]
   public string Name { get; set; }
 
-  [DisplayName( "Address" )]
+  [DisplayName( "Company Name" )]
   [MaxLength( 256 )]
-  public string Address { get; set; }
+  public string CompanyName { get; set; }
 
-  [DisplayName( "Suburb" )]
+  [DisplayName( "Street Address" )]
   [MaxLength( 256 )]
-  public string Suburb { get; set; }
+  public string StreetAddress { get; set; }
 
-  [DisplayName( "State" )]
+  [DisplayName( "City, State, Zip" )]
   [MaxLength( 256 )]
-  public string State { get; set; }
+  public string CityStateZip { get; set; }
 
-  [DisplayName( "Zip Code" )]
-  [MaxLength( 10 )]
-  public string ZipCode { get; set; }
+  [DisplayName( "Phone" )]
+  [MaxLength( 256 )]
+  public string Phone { get; set; }
 }
 
 public class ClientIndexViewModel
