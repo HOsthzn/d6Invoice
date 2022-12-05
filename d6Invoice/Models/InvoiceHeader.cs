@@ -21,3 +21,11 @@ public class InvoiceHeader
   public IEnumerable<InvoiceDetails> Details   { get; set; }
 
 }
+
+public class InvoiceIndexViewModel
+{
+  public int                          PageCount  { get; set; }
+  public int?                         Page       { get; set; }
+  public int?                         RecPerPage { get; set; } = 10;
+  public IEnumerable< InvoiceHeader > Invoices   { get; set; } = new List< InvoiceHeader >();
+}

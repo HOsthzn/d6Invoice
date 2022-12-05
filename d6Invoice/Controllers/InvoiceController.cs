@@ -32,7 +32,7 @@ public class InvoiceController : Controller
                                    {
                                      Page       = page
                                    , RecPerPage = recPerPage
-                                   , Invoices   = await _net.StpAsync< InvoiceViewModel >( "", parameters )
+                                   , Invoices   = await _net.StpAsync< InvoiceHeader >( "", parameters )
                                    , PageCount = ( await _net.StpAsync< PageCount >( ""
                                                   , new Hashtable { { "@recPerPage", recPerPage } } )
                                                  ).First()
@@ -45,9 +45,8 @@ public class InvoiceController : Controller
   //GET Invoice/details
   public async Task< ActionResult > Details( int id )
   {
-    Hashtable                       parameters = new() { { "@Id", id } };
-    IEnumerable< InvoiceViewModel > result = await _net.StpAsync< InvoiceViewModel >( "Client_GetDetails", parameters );
-
+    Hashtable                    parameters = new() { { "@Id", id } };
+    IEnumerable< InvoiceHeader > result     = await _net.StpAsync< InvoiceHeader >( "Client_GetDetails", parameters );
 
     return View( result.First() );
   }
@@ -58,7 +57,7 @@ public class InvoiceController : Controller
   //POST Invoice/create
   [HttpPost]
   [ValidateAntiForgeryToken]
-  public async Task< ActionResult > Create( [Bind( Include = "" )] InvoiceViewModel model )
+  public async Task< ActionResult > Create( [Bind( Include = "" )] InvoiceHeader model )
   {
     if ( !ModelState.IsValid ) return View( model );
 
@@ -66,7 +65,7 @@ public class InvoiceController : Controller
     {
       Hashtable parameters = new() { };
 
-      await _net.StpAsync< InvoiceViewModel >( "", parameters );
+      await _net.StpAsync< InvoiceHeader >( "", parameters );
 
       return RedirectToAction( "Index" );
     }
@@ -80,8 +79,8 @@ public class InvoiceController : Controller
   //GET Invoice/edit
   public async Task< ActionResult > Edit( int id )
   {
-    Hashtable                       parameters = new() { };
-    IEnumerable< InvoiceViewModel > result     = await _net.StpAsync< InvoiceViewModel >( "", parameters );
+    Hashtable                    parameters = new() { };
+    IEnumerable< InvoiceHeader > result     = await _net.StpAsync< InvoiceHeader >( "", parameters );
 
     return View( result.First() );
   }
@@ -89,14 +88,14 @@ public class InvoiceController : Controller
   //POST Invoice/edit
   [HttpPost]
   [ValidateAntiForgeryToken]
-  public async Task< ActionResult > Edit( [Bind( Include = "" )] InvoiceViewModel model )
+  public async Task< ActionResult > Edit( [Bind( Include = "" )] InvoiceHeader model )
   {
     if ( !ModelState.IsValid ) return View( model );
     try
     {
       Hashtable parameters = new() { };
 
-      await _net.StpAsync< InvoiceViewModel >( "", parameters );
+      await _net.StpAsync< InvoiceHeader >( "", parameters );
       return RedirectToAction( "Index" );
     }
     catch ( Exception e )
@@ -109,8 +108,8 @@ public class InvoiceController : Controller
   //GET Invoice/delete
   public async Task< ActionResult > Delete( int id )
   {
-    Hashtable                       parameters = new() { };
-    IEnumerable< InvoiceViewModel > result     = await _net.StpAsync< InvoiceViewModel >( "", parameters );
+    Hashtable                    parameters = new() { };
+    IEnumerable< InvoiceHeader > result     = await _net.StpAsync< InvoiceHeader >( "", parameters );
 
     return View( result.First() );
   }

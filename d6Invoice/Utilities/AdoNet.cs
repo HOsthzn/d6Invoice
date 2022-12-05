@@ -207,7 +207,7 @@ public class AdoNet
       using TransactionScope transactionScope = new();
       using SqlConnection    connection       = new( ConnectionString );
       using SqlCommand       command          = new();
-      //command configuration, set connection, type and the stored procedure to be executed
+      //command configuration, set connection, type and the SQL code to be executed
       command.Connection  = connection;
       command.CommandType = CommandType.Text;
       command.CommandText = sql;

@@ -138,17 +138,13 @@
     <Compile Include="Controllers\ClientController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\InvoiceController.cs" />
-    <Compile Include="Controllers\InvoiceDetailsController.cs" />
-    <Compile Include="Controllers\InvoiceHeaderController.cs" />
     <Compile Include="Controllers\ProductController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Models\Client.cs" />
-    <Compile Include="Models\Invoice.cs" />
     <Compile Include="Models\InvoiceDetails.cs" />
     <Compile Include="Models\InvoiceHeader.cs" />
-    <Compile Include="Models\InvoiceViewModel.cs" />
     <Compile Include="Models\PageCount.cs" />
     <Compile Include="Models\Product.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
